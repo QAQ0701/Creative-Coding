@@ -29,6 +29,7 @@ function draw() {
     lines[i].updateLine();
   }
 }
+//see if can add more shapes and lines
 class Line {
   constructor() {
     this.x = random(width);
