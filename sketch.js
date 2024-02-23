@@ -1,12 +1,13 @@
 let img;
 let shapes = [];
 let lines = [];
-let numShapes = 10; // Number of shapes to draw
+let numShapes = 15; // Number of shapes to draw
 
 function preload() {
   // Load the image
   img = loadImage('./img.png');
 }
+let targetX, targetY; // Target coordinates for mouse interaction
 
 function setup() {
   createCanvas(img.width, img.height);
@@ -21,14 +22,21 @@ function draw() {
   // Display the image
   image(img, 0, 0, width, height);
   
+  // Set the target coordinates to mouse position
+  targetX = mouseX;
+  targetY = mouseY;
+  
   // Draw and update shapes
   for (let i = 0; i < shapes.length; i++) {
     shapes[i].display();
     lines[i].displayLine();
     shapes[i].update();
     lines[i].updateLine();
+    shapes[i].moveTowardsMouse(targetX, targetY); // Move shapes towards mouse
+    lines[i].moveTowardsMouse(targetX, targetY); // Move lines towards mouse
   }
 }
+
 //see if can add more shapes and lines
 class Line {
   constructor() {
@@ -41,7 +49,7 @@ class Line {
     this.fadeTimer = random(100); // Initial fade timer offset
     this.fadeDuration = random(10, 1000); // Fade duration (randomized)
     this.opacity = 0; // Initial opacity
-    this.shapeType = random(["ellipse", "triangle"]); // Randomly choose shape type
+    this.shapeType = random(["ellipse", "triangle", "rectangle"]); // Randomly choose shape type
   }
 
   displayLine() {
@@ -57,6 +65,9 @@ class Line {
     } else if (this.shapeType === "triangle") {
       let halfSize = this.size / 2;
       triangle(this.x, this.y - halfSize, this.x - halfSize, this.y + halfSize, this.x + halfSize, this.y + halfSize);
+    } else if (this.shapeType === "rectangle") {
+      rectMode(CENTER);
+      rect(this.x,this.y,this.size*random(0.3,0.8),this.size*random(0.3,0.8));
     }
   }
 
@@ -87,6 +98,15 @@ class Line {
     }
   }
 
+  moveTowardsMouse(targetX, targetY) {
+    let dx = targetX - this.x;
+    let dy = targetY - this.y;
+    let angleToMouse = atan2(dy, dx);
+    let speed = 2; // Adjust the speed as needed
+    this.x += cos(angleToMouse) * speed;
+    this.y += sin(angleToMouse) * speed;
+  }
+
 }
 // Define a Shape class
 class Shape {
@@ -100,7 +120,7 @@ class Shape {
     this.fadeTimer = random(1000); // Initial fade timer offset
     this.fadeDuration = random(300, 600); // Fade duration (randomized)
     this.opacity = 0; // Initial opacity
-    this.shapeType = random(["ellipse", "triangle"]); // Randomly choose shape type
+    this.shapeType = random(["ellipse", "triangle","rectangle"]); // Randomly choose shape type
   }
   
   // Display the shape
@@ -116,9 +136,11 @@ class Shape {
     } else if (this.shapeType === "triangle") {
       let halfSize = this.size / 2;
       triangle(this.x, this.y - halfSize, this.x - halfSize, this.y + halfSize, this.x + halfSize, this.y + halfSize);
+    } else if (this.shapeType === "rectangle") {
+      rectMode(CENTER);
+      rect(this.x,this.y,this.size*random(1,2),this.size*random(1,2));
     }
   }
-
 
   
   // Update shape's position, size, and opacity
@@ -147,5 +169,14 @@ class Shape {
         this.fadeIn = true; // Switch back to fade-in mode when fully transparent
       }
     }
+  }
+
+  moveTowardsMouse(targetX, targetY) {
+    let dx = targetX - this.x;
+    let dy = targetY - this.y;
+    let angleToMouse = atan2(dy, dx);
+    let speed = 2; // Adjust the speed as needed
+    this.x += cos(angleToMouse) * speed;
+    this.y += sin(angleToMouse) * speed;
   }
 }
