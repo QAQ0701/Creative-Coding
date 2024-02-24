@@ -2,15 +2,25 @@ let img;
 let shapes = [];
 let lines = [];
 let numShapes = 20; // Number of shapes to draw
+let scaledWidth, scaledHeight; // Variables to store scaled image dimensions
 
 function preload() {
   // Load the image
-  img = loadImage('./tree.jpeg');
+  // img = loadImage('./media/img.png');
+  img = loadImage('./media/tree.jpeg');
 }
 let targetX, targetY; // Target coordinates for mouse interaction
 
 function setup() {
-  createCanvas(img.width, img.height);
+  // Create a canvas that fits the window size
+  createCanvas(windowWidth, windowHeight);
+   // Calculate scaled dimensions to fit the window
+   scaledWidth = min(windowWidth, img.width); // Ensure the width fits within the window
+   scaledHeight = img.height * (scaledWidth / img.width); // Maintain aspect ratio
+   
+   // Resize the image
+   img.resize(scaledWidth, scaledHeight);
+   
   // Create initial shapes
   for (let i = 0; i < numShapes; i++) {
     shapes.push(new Shape());
