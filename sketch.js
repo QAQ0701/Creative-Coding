@@ -20,7 +20,7 @@ function setup() {
    
    // Resize the image
    img.resize(scaledWidth, scaledHeight);
-   
+
   // Create initial shapes
   for (let i = 0; i < numShapes; i++) {
     shapes.push(new Shape());
@@ -35,7 +35,9 @@ function draw() {
   // Set the target coordinates to mouse position
   targetX = mouseX;
   targetY = mouseY;
-  
+  shapes[1].display();
+  lines[1].displayLine();
+
   // Draw and update shapes
   for (let i = 0; i < shapes.length; i++) {
     shapes[i].display();
@@ -153,11 +155,11 @@ class Shape {
     this.x = random(width);
     this.y = random(height);
     this.size = random(10, 40);
-    this.sizeChange = random(-1, 1); // Size change rate
+    this.sizeChange = random(-0.2, 0.2); // Size change rate
     this.angle = random(TWO_PI);
     this.speed = random(0.5, 4); // Movement speed (randomized)
-    this.fadeTimer = random(1000); // Initial fade timer offset
-    this.fadeDuration = random(300, 600); // Fade duration (randomized)
+    this.fadeTimer = random(100); // Initial fade timer offset
+    this.fadeDuration = random(500, 1000); // Fade duration (randomized)
     this.opacity = 0; // Initial opacity
     this.shapeType = random(["ellipse", "triangle","rectangle"]); // Randomly choose shape type
   }
@@ -197,10 +199,10 @@ class Shape {
       triangle(this.x, this.y - halfSize, this.x - halfSize, this.y + halfSize, this.x + halfSize, this.y + halfSize);
     } else if (this.shapeType === "rectangle") {
       rectMode(CENTER);
-      rect(this.x,this.y,this.size*random(0.2,1),this.size*random(0.2,1));
+      rect(this.x,this.y,this.size,this.size);
     }
   }
-
+// *random(0.8,1)*random(0.8,1)
   
   // Update shape's position, size, and opacity
   update() {
