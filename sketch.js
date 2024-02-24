@@ -1,7 +1,7 @@
 let img;
 let shapes = [];
 let lines = [];
-let numShapes = 20; // Number of shapes to draw
+let numShapes = 50; // Number of shapes to draw
 let scaledWidth, scaledHeight; // Variables to store scaled image dimensions
 
 function preload() {
