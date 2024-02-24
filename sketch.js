@@ -121,8 +121,9 @@ class Line {
     }
     this.angle += random(-0.1, 0.1); // Randomly change direction
     this.size += this.sizeChange;
+    this.sizeChange = random(-20, 20)
     // Constrain size
-    this.size = constrain(this.size, 10, 90); // Adjust minimum and maximum size as needed
+    this.size = constrain(this.size, 10, 100); // Adjust minimum and maximum size as needed
     
     // Smoothly fade in and fade out
     if (this.fadeIn) {
@@ -155,10 +156,10 @@ class Shape {
     this.x = random(width);
     this.y = random(height);
     this.size = random(10, 40);
-    this.sizeChange = random(-0.2, 0.2); // Size change rate
+    this.sizeChange = random(-0.5, 0.5); // Size change rate
     this.angle = random(TWO_PI);
     this.speed = random(0.5, 4); // Movement speed (randomized)
-    this.fadeTimer = random(100); // Initial fade timer offset
+    this.fadeTimer = random(200); // Initial fade timer offset
     this.fadeDuration = random(500, 1000); // Fade duration (randomized)
     this.opacity = 0; // Initial opacity
     this.shapeType = random(["ellipse", "triangle","rectangle"]); // Randomly choose shape type
@@ -216,8 +217,8 @@ class Shape {
     this.angle += random(-0.1, 0.1); // Randomly change direction
     this.size += this.sizeChange;
     // Constrain size
-    this.size = constrain(this.size, 10, 90); // Adjust minimum and maximum size as needed
-    
+    this.size = constrain(this.size, 1, 100); // Adjust minimum and maximum size as needed
+    this.sizeChange = random(-16, 15)
     // Smoothly fade in and fade out
     if (this.fadeIn) {
       this.opacity += 5; // Increase opacity for fade-in effect
@@ -236,7 +237,7 @@ class Shape {
     let dx = targetX - this.x;
     let dy = targetY - this.y;
     let angleToMouse = atan2(dy, dx);
-    let speed = 2.8; // Adjust the speed as needed
+    let speed = 3; // Adjust the speed as needed
     this.x += cos(angleToMouse) * speed;
     this.y += sin(angleToMouse) * speed;
   }
