@@ -87,7 +87,7 @@ class Line {
     }
     let newS = constrain(s * 100 + this.saturationChange, 0, 100);
     let c = color(r, g, b);
-    c = color(hue(c), saturation(c) * (newS / 100), brightness(c));
+    c = color(hue(c), saturation(c+20) * (newS / 100), brightness(c));
     // Set the fill color with adjusted saturation
     fill(c);
     // Set the stroke color with background color and calculated opacity
