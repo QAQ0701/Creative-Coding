@@ -1,11 +1,11 @@
 let img;
 let shapes = [];
 let lines = [];
-let numShapes = 15; // Number of shapes to draw
+let numShapes = 20; // Number of shapes to draw
 
 function preload() {
   // Load the image
-  img = loadImage('./img.png');
+  img = loadImage('./tree.jpeg');
 }
 let targetX, targetY; // Target coordinates for mouse interaction
 
@@ -40,10 +40,13 @@ function draw() {
 //see if can add more shapes and lines
 class Line {
   constructor() {
+    this.saturationChange = random(-1, 1); // Saturation change rate
     this.x = random(width);
     this.y = random(height);
+    this.lineWidth = random(0.8, 7); // Initial line width
+    this.lineWidthChange = random(-0.2, 0.2); // Line width change rate
     this.size = random(4, 50);
-    this.sizeChange = random(-1.3, 1.3); // Size change rate
+    this.sizeChange = random(-2, 2); // Size change rate
     this.angle = random(TWO_PI);
     this.speed = random(1, 4); // Movement speed (randomized)
     this.fadeTimer = random(100); // Initial fade timer offset
@@ -55,9 +58,30 @@ class Line {
   displayLine() {
     // Sample the color of the background at the current position
     let bgColor = img.get(int(this.x), int(this.y));
+    // Extract RGB components
+    let r = red(bgColor);
+    let g = green(bgColor);
+    let b = blue(bgColor);
+    // Increase saturation
+    let maxRGB = max(r, g, b);
+    let minRGB = min(r, g, b);
+    let delta = (maxRGB - minRGB) / 255;
+    let l = (maxRGB + minRGB) / 510;
+    let s;
+    if (l > 0.5) {
+      s = delta / (2 - maxRGB - minRGB);
+    } else {
+      s = delta / (maxRGB + minRGB);
+    }
+    let newS = constrain(s * 100 + this.saturationChange, 0, 100);
+    let c = color(r, g, b);
+    c = color(hue(c), saturation(c) * (newS / 100), brightness(c));
+    // Set the fill color with adjusted saturation
+    fill(c);
     // Set the stroke color with background color and calculated opacity
     stroke(red(bgColor), green(bgColor), blue(bgColor), this.opacity);
     noFill(); // Remove the fill color
+    strokeWeight(this.lineWidth); // Set the line width
     
     // Draw a shape based on the randomly chosen type
     if (this.shapeType === "ellipse") {
@@ -74,6 +98,10 @@ class Line {
   updateLine() {
     this.x += cos(this.angle) * this.speed;
     this.y += sin(this.angle) * this.speed;
+    // Update line width
+    this.lineWidth += this.lineWidthChange;
+    // Constrain line width
+    this.lineWidth = constrain(this.lineWidth, 0.8, 7); // Adjust minimum and maximum width as needed
     // Wrap around if out of canvas
     if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
       this.x = random(width);
@@ -111,6 +139,7 @@ class Line {
 // Define a Shape class
 class Shape {
   constructor() {
+    this.saturationChange = random(-5, 5);
     this.x = random(width);
     this.y = random(height);
     this.size = random(10, 40);
@@ -126,7 +155,27 @@ class Shape {
   // Display the shape
   display() {
     // Sample the color of the background at the current position
-    let bgColor = img.get(int(this.x)+10, int(this.y)+10);
+    let bgColor = img.get(int(this.x), int(this.y));    // Sample the color of the background at the current position
+    // Extract RGB components
+    let r = red(bgColor);
+    let g = green(bgColor);
+    let b = blue(bgColor);
+    // Increase saturation
+    let maxRGB = max(r, g, b);
+    let minRGB = min(r, g, b);
+    let delta = (maxRGB - minRGB) / 255;
+    let l = (maxRGB + minRGB) / 510;
+    let s;
+    if (l > 0.5) {
+      s = delta / (2 - maxRGB - minRGB);
+    } else {
+      s = delta / (maxRGB + minRGB);
+    }
+    let newS = constrain(s * 100 + this.saturationChange, 0, 100);
+    let c = color(r, g, b);
+    c = color(hue(c), saturation(c) * (newS / 100), brightness(c));
+    // Set the fill color with adjusted saturation
+    fill(c);
     // Set the fill color with background color and calculated opacity
     fill(red(bgColor)*1.5, green(bgColor)*1.5, blue(bgColor)*1.5, this.opacity);
     noStroke(); // Remove the black border
@@ -138,7 +187,7 @@ class Shape {
       triangle(this.x, this.y - halfSize, this.x - halfSize, this.y + halfSize, this.x + halfSize, this.y + halfSize);
     } else if (this.shapeType === "rectangle") {
       rectMode(CENTER);
-      rect(this.x,this.y,this.size*random(1,2),this.size*random(1,2));
+      rect(this.x,this.y,this.size*random(0.2,1),this.size*random(0.2,1));
     }
   }
 
@@ -175,7 +224,7 @@ class Shape {
     let dx = targetX - this.x;
     let dy = targetY - this.y;
     let angleToMouse = atan2(dy, dx);
-    let speed = 2; // Adjust the speed as needed
+    let speed = 2.8; // Adjust the speed as needed
     this.x += cos(angleToMouse) * speed;
     this.y += sin(angleToMouse) * speed;
   }
