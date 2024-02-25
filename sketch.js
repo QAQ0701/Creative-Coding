@@ -1,26 +1,37 @@
-let img;
+let bg;
+let img2;
 let shapes = [];
 let lines = [];
-let numShapes = 50; // Number of shapes to draw
+let numShapes = 100; // Number of shapes to draw
 let scaledWidth, scaledHeight; // Variables to store scaled image dimensions
+let x = 1000; // x-coordinate of the top-left corner of the desired portion
+let y = 1000; // y-coordinate of the top-left corner of the desired portion
+let w = 7000; // width of the desired portion
+let h = 2600; // height of the desired portion
+
 
 function preload() {
   // Load the image
-  // img = loadImage('./media/img.png');
-  img = loadImage('./media/tree.jpeg');
+  img2 = loadImage('./media/person.png');
+  bg = loadImage('./media/tree.jpeg');
 }
+
 let targetX, targetY; // Target coordinates for mouse interaction
 
 function setup() {
   // Create a canvas that fits the window size
   createCanvas(windowWidth, windowHeight);
+  
+  //createCanvas(800, 400);
+  // createCanvas(bg.width,bg.height);
    // Calculate scaled dimensions to fit the window
-   scaledWidth = min(windowWidth, img.width); // Ensure the width fits within the window
-   scaledHeight = img.height * (scaledWidth / img.width); // Maintain aspect ratio
+  //  scaledWidth = min(windowWidth, img.width); // Ensure the width fits within the window
+  //  scaledHeight = img.height * (scaledWidth / img.width); // Maintain aspect ratio
    
    // Resize the image
-   img.resize(scaledWidth, scaledHeight);
-
+  //  img.resize(scaledWidth, scaledHeight);
+  //  img2.resize(scaledWidth, scaledHeight);
+  
   // Create initial shapes
   for (let i = 0; i < numShapes; i++) {
     shapes.push(new Shape());
@@ -30,13 +41,42 @@ function setup() {
 
 function draw() {
   // Display the image
-  image(img, 0, 0, width, height);
+  //image(bg, 0, 0, bg.width, bg.height);
+  let dx = mouseX-x;
+  let dy = mouseY-y;
+  // Calculate the distance of the mouse from the left and right edges of the canvas
+  let distanceToLeftEdge = mouseX;
+  let distanceToRightEdge = width - mouseX;
+  x += dx * 0.05;
+  y += dy * 0.05;
+
+  image(bg, 0, 0, width, height, x, y, width, height);
+
+  // Define the threshold for triggering the background movement
+  // let threshold = 500;
+  // Define the speed factor
+  // let speedFactor = 0.1; // Adjust this value to control the speed
+
+  // Check if the mouse is within the threshold distance from the left edge
+  // if (distanceToLeftEdge < threshold) {
+  //   // Move the background image to the right
+  //   let offsetX = (threshold - distanceToLeftEdge) * speedFactor;
+  //   image(bg, offsetX, 0, bg.width, bg.height);
+  //   image(img2, (threshold - distanceToLeftEdge)*0.6 , 0, width, height);
+  // }
+  // // Check if the mouse is within the threshold distance from the right edge
+  // else if (distanceToRightEdge < threshold) {
+  //   // Move the background image to the left
+  //   image(bg, -(threshold - distanceToRightEdge)*0.2, 0, width, height);
+  // }
+  // // If the mouse is not near either edge, display the background image normally
+  // else {
+  //   image(bg, 0, 0, width, height);
+  // }
   
   // Set the target coordinates to mouse position
   targetX = mouseX;
   targetY = mouseY;
-  shapes[1].display();
-  lines[1].displayLine();
 
   // Draw and update shapes
   for (let i = 0; i < shapes.length; i++) {
@@ -47,6 +87,7 @@ function draw() {
     shapes[i].moveTowardsMouse(targetX, targetY); // Move shapes towards mouse
     lines[i].moveTowardsMouse(targetX, targetY); // Move lines towards mouse
   }
+
 }
 
 //see if can add more shapes and lines
@@ -69,7 +110,7 @@ class Line {
 
   displayLine() {
     // Sample the color of the background at the current position
-    let bgColor = img.get(int(this.x), int(this.y));
+    let bgColor = bg.get(int(this.x), int(this.y));
     // Extract RGB components
     let r = red(bgColor);
     let g = green(bgColor);
@@ -168,7 +209,7 @@ class Shape {
   // Display the shape
   display() {
     // Sample the color of the background at the current position
-    let bgColor = img.get(int(this.x), int(this.y));    // Sample the color of the background at the current position
+    let bgColor = bg.get(int(this.x), int(this.y));    // Sample the color of the background at the current position
     // Extract RGB components
     let r = red(bgColor);
     let g = green(bgColor);
